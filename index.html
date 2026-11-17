@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UniMate Dog Demo</title>
+<script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<style>
+:root{--bg:#f6f4ef;--card:#fff;--ink:#1d1b18;--muted:#6b665d;--line:#e3ded4;--accent:#b5651d;--chip:#f1e6d8;--warn:#8a5a00;--warnbg:#fdf3dc}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151412;--card:#1f1d1a;--ink:#eeeae2;--muted:#a39d92;--line:#33302b;--accent:#e08a3c;--chip:#3a2c1e;--warn:#f0c46a;--warnbg:#3a3020}}
+:root[data-theme="dark"]{--bg:#151412;--card:#1f1d1a;--ink:#eeeae2;--muted:#a39d92;--line:#33302b;--accent:#e08a3c;--chip:#3a2c1e;--warn:#f0c46a;--warnbg:#3a3020}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1080px;margin:0 auto;padding:32px max(16px,env(safe-area-inset-left)) 64px max(16px,env(safe-area-inset-right))}
+h1{font-size:clamp(1.6rem,4vw,2.3rem);margin:0 0 6px;letter-spacing:-.01em}
+h2{font-size:1.25rem;margin:40px 0 12px}
+p{margin:0 0 12px}.muted{color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.viewer{display:grid;grid-template-columns:1fr 260px;gap:0}
+model-viewer{width:100%;height:440px;background:radial-gradient(circle at 50% 40%,var(--card),var(--bg))}
+.side{padding:16px;border-left:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.side h3{margin:0 0 4px;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+button.m{all:unset;cursor:pointer;padding:8px 12px;border-radius:9px;border:1px solid var(--line);font-size:.95rem}
+button.m:hover{border-color:var(--accent)}
+button.m[aria-pressed="true"]{background:var(--chip);border-color:var(--accent);font-weight:600}
+button.m:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.prompt{font-family:ui-monospace,Consolas,monospace;font-size:.85rem;color:var(--muted);padding:10px 16px;border-top:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.grid figure{margin:0}.grid img{width:100%;display:block}
+figcaption{padding:10px 14px;font-size:.92rem}
+figcaption b{display:block}
+.tag{display:inline-block;font-size:.75rem;padding:1px 8px;border-radius:99px;background:var(--chip);margin-left:6px;vertical-align:1px}
+.tag.w{background:var(--warnbg);color:var(--warn)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.two img{width:100%;display:block}
+ol.pipe{padding-left:20px;margin:0}ol.pipe li{margin:6px 0}
+code{font-family:ui-monospace,Consolas,monospace;font-size:.88em;background:var(--chip);padding:1px 5px;border-radius:5px}
+.note{background:var(--warnbg);color:var(--ink);border-radius:12px;padding:14px 16px;font-size:.95rem}
+.note b{color:var(--warn)}
+@media (max-width:760px){.viewer{grid-template-columns:1fr}.side{border-left:0;border-top:1px solid var(--line);flex-direction:row;flex-wrap:wrap}.side h3{width:100%}model-viewer{height:340px}.two{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+  <h1>A home-made dog, animated by UniMate</h1>
+  <p class="muted">I built and rigged this dog procedurally in Blender. UniMate, a text-to-motion model for any skeleton (SIGGRAPH Asia 2026), then generated each motion from a one-line prompt and ran it locally on an RTX 4060. Drag to orbit, scroll to zoom.</p>
+
+  <div class="card">
+    <div class="viewer">
+      <model-viewer id="mv" src="models/dog_jumps_forward.glb" camera-controls autoplay shadow-intensity="1" exposure="0.8" environment-image="neutral" camera-orbit="35deg 72deg auto" interaction-prompt="none" alt="Animated 3D dog"></model-viewer>
+      <div class="side" id="side">
+        <h3>My dog</h3>
+        <button class="m" data-src="models/dog_jumps_forward.glb" data-p="an object jumps forward" aria-pressed="true">Jump forward</button>
+        <button class="m" data-src="models/dog_runs_forward.glb" data-p="an object runs forward">Run</button>
+        <button class="m" data-src="models/dog_walks_forward.glb" data-p="an object walks forward">Walk</button>
+        <button class="m" data-src="models/dog_wags_its_tail.glb" data-p="an object wags its tail">Wag tail</button>
+        <button class="m" data-src="models/dog_sits_down.glb" data-p="an object sits down">Sit down</button>
+        <h3 style="margin-top:10px">Repo examples</h3>
+        <button class="m" data-src="models/eagle.glb" data-p="an object flaps its wings">Eagle</button>
+        <button class="m" data-src="models/shark.glb" data-p="an object swims and turns around">Shark</button>
+        <button class="m" data-orbit="60deg 68deg 320%" data-src="models/go2.glb" data-p="an object trots forward">Unitree Go2 robot</button>
+      </div>
+    </div>
+    <div class="prompt">prompt: &ldquo;<span id="pt">an object jumps forward</span>&rdquo;</div>
+  </div>
+
+  <h2>Motion clips</h2>
+  <div class="grid">
+    <figure class="card"><img src="gifs/dog_jumps_forward.gif" alt="Dog jumping forward" loading="lazy"><figcaption><b>Jump forward <span class="tag">best</span></b>Crouches, leaps, lands cleanly.</figcaption></figure>
+    <figure class="card"><img src="gifs/dog_runs_forward.gif" alt="Dog running" loading="lazy"><figcaption><b>Run <span class="tag">good</span></b>Gallop-like gait, mostly on the spot.</figcaption></figure>
+    <figure class="card"><img src="gifs/dog_wags_its_tail.gif" alt="Dog wagging its tail" loading="lazy"><figcaption><b>Wag tail <span class="tag">good</span></b>The tail chain swings while the body stays put.</figcaption></figure>
+    <figure class="card"><img src="gifs/dog_walks_forward.gif" alt="Dog walking" loading="lazy"><figcaption><b>Walk <span class="tag w">weak</span></b>Small steps, but under 0.25 units of travel.</figcaption></figure>
+    <figure class="card"><img src="gifs/dog_sits_down.gif" alt="Dog sit-down attempt" loading="lazy"><figcaption><b>Sit down <span class="tag w">miss</span></b>Starts crouched and rises, so it isn't a real sit.</figcaption></figure>
+  </div>
+
+  <h2>How it was made</h2>
+  <div class="two">
+    <div class="card"><img src="img/dog_preview.png" alt="Rest pose of the procedural dog"></div>
+    <div class="card" style="padding:16px 18px">
+      <ol class="pipe">
+        <li><b>Model and rig.</b> A Blender script builds a skin-modifier body plus a 27-bone skeleton (spine, neck, head, jaw, 3-bone tail, ears, 4 legs), then auto-weights it.</li>
+        <li><b>Preprocess.</b> <code>rig_preprocess --annotate rule</code> labels the bones and writes the skeleton conditioning, <code>cond.npy</code>.</li>
+        <li><b>Generate.</b> The flow-matching model, with flan-t5 text conditioning and checkpoint step 150k, outputs 60 frames per prompt in about 20 s.</li>
+        <li><b>Retarget.</b> <code>animate_motion.py</code> drives the skinned mesh by FK and exports GLB and FBX.</li>
+      </ol>
+    </div>
+  </div>
+
+  <h2>Honest take</h2>
+  <div class="note"><b>Works:</b> it animates a skeleton it has never seen, with no training on dogs, from plain text. <b>Limits:</b> locomotion tends to stay on the spot, some samples miss (for example sit down), and it does no auto-rigging, so you still need a rigged model. Run a few samples per prompt and keep the best one.</div>
+  <p class="muted" style="margin-top:32px;font-size:.85rem">Motions generated with <a href="https://github.com/Friedrich-M/UniMate">UniMate</a> (code MIT, checkpoints CC BY-NC 4.0, so this is for non-commercial use only). The eagle, shark and Unitree Go2 assets come from the UniMate repo examples. The dog model was built with <a href="build_dog.py">build_dog.py</a>.</p>
+</main>
+
+<script>
+const mv=document.getElementById('mv'),pt=document.getElementById('pt');
+document.getElementById('side').addEventListener('click',e=>{
+  const b=e.target.closest('button.m');if(!b)return;
+  document.querySelectorAll('button.m').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  mv.cameraOrbit=b.dataset.orbit||"35deg 72deg auto";mv.src=b.dataset.src;pt.textContent=b.dataset.p;
+});
+mv.addEventListener('load',()=>{try{mv.play()}catch(e){}});
+</script>
+</body>
+</html>
